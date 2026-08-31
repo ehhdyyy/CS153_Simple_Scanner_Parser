@@ -1,11 +1,13 @@
 Parse tree:
 
-                                                            PROGRAM TestIf1 
-                                                                   │
-                                                             3: COMPOUND  
-                ┌─────────────────────────────────┬───────────────┴────────────────────────────────────────────────┐
-           4: ASSIGN                         5: ASSIGN                                                          6: IF  
-      ┌────────┴───────┐                ┌────────┴───────┐                       ┌────────────────────────────┬───┴───────────────────────────────┐
- VARIABLE i   INTEGER_CONSTANT 1   VARIABLE j   INTEGER_CONSTANT 1              EQ                       7: ASSIGN                           8: ASSIGN  
-                                                                          ┌──────┴─────┐            ┌────────┴────────┐                 ┌────────┴────────┐
-                                                                     VARIABLE i   VARIABLE j   VARIABLE t   INTEGER_CONSTANT 200   VARIABLE f   INTEGER_CONSTANT 200 
+                                                           PROGRAM TestIf2 
+                                                                  │
+                                                            3: COMPOUND  
+                ┌─────────────────────────────────┬──────────────┴────────────────────────────────────────────────┐
+           4: ASSIGN                         5: ASSIGN                                                         7: IF  
+      ┌────────┴───────┐                ┌────────┴───────┐                       ┌────────────────────────────┬──┴──────────────────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 1   VARIABLE j   INTEGER_CONSTANT 2              EQ                       7: ASSIGN                         8: ASSIGN 
+                                                                          ┌──────┴─────┐            ┌────────┴───────┐                ┌────────┴───────┐
+                                                                     VARIABLE i   VARIABLE j   VARIABLE x   REAL_CONSTANT 3.14   VARIABLE x         NEGATE  
+  │
+                                                                                                                                              INTEGER_CONSTANT 5 

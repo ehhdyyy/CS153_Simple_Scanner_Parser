@@ -1,0 +1,15 @@
+Parse tree:
+
+                                                            PROGRAM TestIf3 
+                                                                   │
+                                                             3: COMPOUND  
+                ┌─────────────────────────────────┬───────────────┴────────────────────────────────────────────────┐
+           4: ASSIGN                         5: ASSIGN                                                          7: IF  
+      ┌────────┴───────┐                ┌────────┴───────┐                       ┌────────────────────────────────┴───────────────────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 2   VARIABLE j   INTEGER_CONSTANT 2              EQ                                                             7: IF 
+                                                                          ┌──────┴─────┐                     ┌──────────────────────────────────┬┴──────────────────────────────────┐
+                                                                     VARIABLE i   VARIABLE j                EQ                             7: ASSIGN                          7: ASSIGN  
+                                                                                                    ┌────────┴───────┐                ┌────────┴────────┐                 ┌────────┴────────┐
+                                                                                               VARIABLE j   INTEGER_CONSTANT 2   VARIABLE t   INTEGER_CONSTANT 500   VARIABLE f          NEGATE  
+                                       │
+                             INTEGER_CONSTANT 500 

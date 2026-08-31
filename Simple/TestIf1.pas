@@ -1,9 +1,8 @@
-program TestIf1;
-
-begin
-  i := 1;
-  j := 1;
-  IF (i = j) 
-    THEN t := 200
-  ELSE f := -200;
-end.
+PROGRAM TestIf1;
+    
+BEGIN
+    i := 1;
+    j := 2;
+    
+    IF i <= j THEN x := 3.14;
+END.
