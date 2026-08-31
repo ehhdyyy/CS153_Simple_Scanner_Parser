@@ -91,6 +91,8 @@ public class Parser
         statementStarters.add(BEGIN);
         statementStarters.add(IDENTIFIER);
         statementStarters.add(REPEAT);
+        statementStarters.add(WHILE);
+        statementStarters.add(DO);
         statementStarters.add(Token.TokenType.WRITE);
         statementStarters.add(Token.TokenType.WRITELN);
         
@@ -102,6 +104,10 @@ public class Parser
         
         relationalOperators.add(EQUALS);
         relationalOperators.add(LESS_THAN);
+        relationalOperators.add(LESS_EQUALS);
+        relationalOperators.add(GREATER_THAN);
+        relationalOperators.add(GREATER_EQUALS);
+        relationalOperators.add(NOT_EQUALS);
         
         simpleExpressionOperators.add(PLUS);
         simpleExpressionOperators.add(MINUS);
@@ -121,6 +127,7 @@ public class Parser
             case IDENTIFIER : stmtNode = parseAssignmentStatement(); break;
             case BEGIN :      stmtNode = parseCompoundStatement();   break;
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
+            case WHILE :      stmtNode = parseWhileStatement();      break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
             case SEMICOLON :  stmtNode = null; break;  // empty statement
@@ -243,6 +250,38 @@ public class Parser
         
         return loopNode;
     }
+
+    private Node parseWhileStatement()
+    {
+        // The current token should now be WHILE.
+
+        // Create a LOOP node.
+        Node loopNode = new Node(LOOP);
+
+        currentToken = scanner.nextToken(); // Consume WHILE
+
+        // Create a TEST node.
+        Node testNode = new Node(TEST);
+        testNode.lineNumber = currentToken.lineNumber;
+
+        testNode.adopt(parseExpression());
+        
+
+        if (currentToken.type == DO)
+        {
+            currentToken = scanner.nextToken(); // Consume DO
+        }
+        else syntaxError("Expecting DO");
+        
+        // The LOOP node adopts the TEST node as its first child.
+        loopNode.adopt(testNode);
+
+        // The LOOP node adopts the statement node as its second child.
+        Node stmtNode = parseStatement();
+        if (stmtNode != null) loopNode.adopt(stmtNode);
+
+        return loopNode;
+    }
     
     private Node parseWriteStatement()
     {
@@ -355,6 +394,10 @@ public class Parser
             Token.TokenType tokenType = currentToken.type;
             Node opNode = tokenType == EQUALS    ? new Node(EQ)
                         : tokenType == LESS_THAN ? new Node(LT)
+                        : tokenType == LESS_EQUALS ? new Node(LE)
+                        : tokenType == GREATER_THAN ? new Node(GT)
+                        : tokenType == GREATER_EQUALS ? new Node(GE)
+                        : tokenType == NOT_EQUALS ? new Node(NE)
                         :                          null;
             
             // Consume relational operator.

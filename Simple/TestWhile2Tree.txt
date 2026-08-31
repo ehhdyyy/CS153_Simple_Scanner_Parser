@@ -1,0 +1,19 @@
+Parse tree:            
+
+                                                   PROGRAM TestWhile2 
+                                                           │
+                                                     3: COMPOUND  
+                ┌─────────────────────────────────────────┴────────────────────────────────────────┐
+           4: ASSIGN                                                                           6: LOOP  
+      ┌────────┴───────┐                          ┌───────────────────────────────────────────────┴──────────────────────────────────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 1              6: TEST                                                                                      6: COMPOUND  
+                                                 │                                  ┌──────────────────────────────────────────────────────┬────┴───────────────────────────────────────────────────────────┐
+                                                LE                             7: ASSIGN                                               9: LOOP                                                         13: ASSIGN  
+                                        ┌────────┴───────┐                ┌────────┴───────┐                           ┌──────────────────┴──────────────────┐                                  ┌───────────┴──────────┐
+                                   VARIABLE i   INTEGER_CONSTANT 5   VARIABLE j   INTEGER_CONSTANT 10              9: TEST                             9: COMPOUND                         VARIABLE i                ADD  
+                                                                                                                      │                                     │                                                ┌────────┴───────┐
+                                                                                                                     LE                                10: ASSIGN                                       VARIABLE i   INTEGER_CONSTANT 1 
+                                                                                                             ┌────────┴───────┐                 ┌───────────┴──────────┐
+                                                                                                        VARIABLE j   INTEGER_CONSTANT 30   VARIABLE j                ADD  
+                                                                                                                                                             ┌────────┴───────┐
+                                                                                                                                                        VARIABLE j   INTEGER_CONSTANT 10
