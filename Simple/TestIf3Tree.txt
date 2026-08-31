@@ -1,0 +1,13 @@
+Parse tree:
+
+                                                                        PROGRAM TestIf3 
+                                                                               │
+                                                                         3: COMPOUND  
+                ┌─────────────────────────────────┬───────────────────────────┴─────────────────────────────────────────────────────────────┐
+           4: ASSIGN                         5: ASSIGN                                                                                   7: IF  
+      ┌────────┴───────┐                ┌────────┴───────┐                       ┌───────────────────────────────────────────────┬─────────┴─────────────────────────────────────────────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 1   VARIABLE j   INTEGER_CONSTANT 2              GT                                         7: COMPOUND                                          11: COMPOUND  
+                                                                          ┌──────┴─────┐                      ┌─────────────────┴────────────────┐                              ┌─────────────────┴────────────────┐
+                                                                     VARIABLE i   VARIABLE j             8: ASSIGN                          9: ASSIGN                         12: ASSIGN                         13: ASSIGN  
+                                                                                                    ┌────────┴───────┐                 ┌────────┴───────┐                 ┌────────┴───────┐                 ┌────────┴───────┐
+                                                                                               VARIABLE x   REAL_CONSTANT 55.55   VARIABLE y   REAL_CONSTANT 66.66   VARIABLE x   REAL_CONSTANT 77.77   VARIABLE y   REAL_CONSTANT 88.88 

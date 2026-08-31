@@ -92,6 +92,7 @@ public class Parser
         statementStarters.add(IDENTIFIER);
         statementStarters.add(REPEAT);
         statementStarters.add(WHILE);
+        statementStarters.add(Token.TokenType.IF);
         statementStarters.add(DO);
         statementStarters.add(Token.TokenType.WRITE);
         statementStarters.add(Token.TokenType.WRITELN);
@@ -128,6 +129,7 @@ public class Parser
             case BEGIN :      stmtNode = parseCompoundStatement();   break;
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
             case WHILE :      stmtNode = parseWhileStatement();      break;
+            case IF :         stmtNode = parseIfStatement();         break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
             case SEMICOLON :  stmtNode = null; break;  // empty statement
@@ -282,6 +284,41 @@ public class Parser
 
         return loopNode;
     }
+
+    private Node parseIfStatement()
+    {
+        //The current Node should now be IF.
+
+        //Create an IF node
+        Node ifNode = new Node(Node.NodeType.IF);
+
+        currentToken = scanner.nextToken(); //Consume IF
+
+        // The IF node adopts the EQ node as its first child
+        ifNode.adopt(parseExpression());
+
+        if (currentToken.type == THEN)
+        {
+            currentToken = scanner.nextToken(); // Consume THEN
+        }
+        else syntaxError("Expecting THEN");
+
+        // The IF node adopts the THEN node as its second child
+        Node thenNode = parseStatement();
+        if (thenNode != null) ifNode.adopt(thenNode);
+
+        // If there is an ELSE statement
+        if (currentToken.type == ELSE)
+        {
+            currentToken = scanner.nextToken(); // Consume ELSE
+            // The IF node adopts the ELSE node as its third child
+            Node elseNode = parseStatement();
+            if (elseNode != null) ifNode.adopt(elseNode);
+
+        }
+
+        return ifNode;
+    }
     
     private Node parseWriteStatement()
     {
@@ -421,7 +458,15 @@ public class Parser
     private Node parseSimpleExpression()
     {
         // The current token should now be an identifier or a number.
-        
+        Node signNode = null;
+        // Check for a negative sign
+        if (currentToken.type == MINUS)
+        {
+            signNode = new Node(NEGATE);
+            //Consume the sign
+            currentToken = scanner.nextToken();
+        }
+
         // The simple expression's root node.
         Node simpExprNode = parseTerm();
         
@@ -440,6 +485,12 @@ public class Parser
             opNode.adopt(simpExprNode);
             opNode.adopt(parseTerm());
             simpExprNode = opNode;
+        }
+
+        //If the sign is negative, adopt the expression under the sign node
+        if (signNode != null) {
+            signNode.adopt(simpExprNode);
+            return signNode;
         }
         
         return simpExprNode;

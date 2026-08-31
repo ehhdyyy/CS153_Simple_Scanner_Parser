@@ -13,7 +13,7 @@ public class Token
 {
     public enum TokenType
     {
-        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, WRITE, WRITELN, 
+        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, IF, THEN, ELSE, WRITE, WRITELN, 
         PERIOD, COLON, COLON_EQUALS, SEMICOLON,
         PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, 
         EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, NOT_EQUALS,
@@ -35,6 +35,9 @@ public class Token
         reservedWords.put("UNTIL",   TokenType.UNTIL);
         reservedWords.put("WHILE",   TokenType.WHILE);
         reservedWords.put("DO",      TokenType.DO);
+        reservedWords.put("IF",      TokenType.IF);
+        reservedWords.put("THEN",    TokenType.THEN);
+        reservedWords.put("ELSE",    TokenType.ELSE);
         reservedWords.put("WRITE",   TokenType.WRITE);
         reservedWords.put("WRITELN", TokenType.WRITELN);
     }
