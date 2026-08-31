@@ -307,6 +307,7 @@ public class Parser
         Node thenNode = parseStatement();
         if (thenNode != null) ifNode.adopt(thenNode);
 
+        // If there is an ELSE statement
         if (currentToken.type == ELSE)
         {
             currentToken = scanner.nextToken(); // Consume ELSE
@@ -457,7 +458,15 @@ public class Parser
     private Node parseSimpleExpression()
     {
         // The current token should now be an identifier or a number.
-        
+        Node signNode = null;
+        // Check for a negative sign
+        if (currentToken.type == MINUS)
+        {
+            signNode = new Node(NEGATE);
+            //Consume the sign
+            currentToken = scanner.nextToken();
+        }
+
         // The simple expression's root node.
         Node simpExprNode = parseTerm();
         
@@ -476,6 +485,12 @@ public class Parser
             opNode.adopt(simpExprNode);
             opNode.adopt(parseTerm());
             simpExprNode = opNode;
+        }
+
+        //If the sign is negative, adopt the expression under the sign node
+        if (signNode != null) {
+            signNode.adopt(simpExprNode);
+            return signNode;
         }
         
         return simpExprNode;
