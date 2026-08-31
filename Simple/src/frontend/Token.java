@@ -13,10 +13,10 @@ public class Token
 {
     public enum TokenType
     {
-        PROGRAM, BEGIN, END, REPEAT, UNTIL, WRITE, WRITELN, 
+        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, WRITE, WRITELN, 
         PERIOD, COLON, COLON_EQUALS, SEMICOLON,
         PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, 
-        EQUALS, LESS_THAN,
+        EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, NOT_EQUALS,
         IDENTIFIER, INTEGER, REAL, STRING, END_OF_FILE, ERROR
     }
     
@@ -33,6 +33,8 @@ public class Token
         reservedWords.put("END",     TokenType.END);
         reservedWords.put("REPEAT",  TokenType.REPEAT);
         reservedWords.put("UNTIL",   TokenType.UNTIL);
+        reservedWords.put("WHILE",   TokenType.WHILE);
+        reservedWords.put("DO",      TokenType.DO);
         reservedWords.put("WRITE",   TokenType.WRITE);
         reservedWords.put("WRITELN", TokenType.WRITELN);
     }
@@ -165,7 +167,53 @@ public class Token
             case '*' : token.type = TokenType.STAR;       break;
             case '/' : token.type = TokenType.SLASH;      break;
             case '=' : token.type = TokenType.EQUALS;     break;
-            case '<' : token.type = TokenType.LESS_THAN;  break;
+            case '<' : 
+            {
+                char nextChar = source.nextChar();
+                token.text += nextChar;
+                
+                // Is it the <= symbol?
+                if (nextChar == '=')
+                {
+                    token.type = TokenType.LESS_EQUALS;
+                }
+
+                // No, it's just the <> symbol.
+                else if (nextChar == '>')
+                {
+                    token.type = TokenType.NOT_EQUALS;
+                }
+
+                else //No, it's just the < symbol.
+                {
+                    token.type = TokenType.LESS_THAN;
+                    return token;  // already consumed <
+                }
+
+                break;
+            }
+
+            case '>' : 
+            {
+                char nextChar = source.nextChar();
+                token.text += nextChar;
+                
+                // Is it the >= symbol?
+                if (nextChar == '=')
+                {
+                    token.type = TokenType.GREATER_EQUALS;
+                }
+
+                // No, it's just the > symbol.
+                else
+                {
+                    token.type = TokenType.GREATER_THAN;
+                    return token;  // already consumed <
+                }
+
+                break;
+            }
+
             case '(' : token.type = TokenType.LPAREN;     break;
             case ')' : token.type = TokenType.RPAREN;     break;
             
