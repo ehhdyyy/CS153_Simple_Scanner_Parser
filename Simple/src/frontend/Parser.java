@@ -290,30 +290,40 @@ public class Parser
 
     private Node parseForStatement () {
         System.out.println ("for loop ran");
+        Node compound = new Node (COMPOUND);
+
+
         Node loopNode = new Node (LOOP);
+        Node testNode = new Node (TEST);
+
 
         if (currentToken.type == FOR)
             currentToken = scanner.nextToken();
         else
             syntaxError ("expecting FOR loop");
 
-        Node testNode = new Node (TEST);
-        loopNode.adopt (testNode);
+        Node initial_assignment = parseAssignmentStatement();
+        compound.adopt (initial_assignment);
+        compound.adopt (loopNode);
 
-        Node variable = parseAssignmentStatement().getChildren().getFirst(); // var set by for ( i := ... )
-
+        Node variable = initial_assignment.getChildren().getFirst(); // var set by for ( i := ... )
+        Node updator = null;
         Node comparison = null;
+
         if (currentToken.type == TO) {
             currentToken = scanner.nextToken();
-            comparison = new Node (LT);
+            updator = new Node (ADD);
+            comparison = new Node (GT);
         } else if (currentToken.type == DOWNTO) {
             currentToken = scanner.nextToken();
-            comparison = new Node (GT);
+            updator = new Node (SUBTRACT);
+            comparison = new Node (LT);
         } else
             syntaxError ("expecting TO or DOWNTO (for loop)");
 
         testNode.adopt (comparison);
         assert comparison != null; // just adding to get rid of squiggle
+
         comparison.adopt (variable);
         comparison.adopt (parseExpression());
 
@@ -321,9 +331,22 @@ public class Parser
             currentToken = scanner.nextToken();
         else
             syntaxError ("expecting DO");
-        loopNode.adopt(parseStatement());
 
-        return loopNode;
+        loopNode.adopt (testNode);
+        loopNode.adopt (parseStatement());
+
+        Node updateVar = new Node (ASSIGN);
+        updateVar.adopt (variable);
+        updateVar.adopt (updator);
+
+        updator.adopt (variable);
+        Node one = new Node (INTEGER_CONSTANT);
+        one.value = 1L; // i have to do this since there's only one constructor ;_;
+        updator.adopt (one);
+
+        loopNode.adopt (updateVar);
+
+        return compound;
     }
 
     private Node parseIfStatement()

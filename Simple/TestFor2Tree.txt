@@ -1,18 +1,20 @@
 for loop ran
 Parse tree:
 
-                                  PROGRAM TestFor2 
-                                         │
-                                   3: COMPOUND  
-                                        │
-                                    4: LOOP  
-               ┌───────────────────────┴──────────────────────┐
-             TEST                                       4: COMPOUND  
-               │                                             │
-              GT                                        5: ASSIGN  
-      ┌────────┴───────┐                ┌───────────────────┴───────────────────┐
- VARIABLE i   INTEGER_CONSTANT 1   VARIABLE j                                 ADD  
-                                                                  ┌────────────┴────────────┐
-                                                              MULTIPLY             INTEGER_CONSTANT 1 
-                                                         ┌────────┴────────┐
-                                                INTEGER_CONSTANT 10   VARIABLE i 
+                                                      PROGRAM TestFor2 
+                                                             │
+                                                       3: COMPOUND  
+                                                            │
+                                                      4: COMPOUND  
+               ┌───────────────────────────────────────────┴──────────────────────────────────────────┐
+            ASSIGN                                                                                  LOOP  
+      ┌────────┴───────┐                         ┌──────────────────────────────────────────────┬─────┴───────────────────────────────────────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 5               TEST                                       4: COMPOUND                                                  ASSIGN  
+                                                 │                                             │                                               ┌──────────┴──────────┐
+                                                LT                                        5: ASSIGN                                       VARIABLE i             SUBTRACT  
+                                        ┌────────┴───────┐                ┌───────────────────┴───────────────────┐                                         ┌────────┴───────┐
+                                   VARIABLE i   INTEGER_CONSTANT 1   VARIABLE j                                 ADD                                    VARIABLE i   INTEGER_CONSTANT 1 
+                                                                                                    ┌────────────┴────────────┐
+                                                                                                MULTIPLY             INTEGER_CONSTANT 1 
+                                                                                           ┌────────┴────────┐
+                                                                                  INTEGER_CONSTANT 10   VARIABLE i 
