@@ -13,8 +13,8 @@ public class Token
 {
     public enum TokenType
     {
-        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, FOR, IF, THEN, ELSE, WRITE, WRITELN,
-        PERIOD, COLON, COLON_EQUALS, SEMICOLON,
+        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, FOR, IF, THEN, ELSE, CASE, OF, WRITE, WRITELN,
+        PERIOD, COLON, COLON_EQUALS, SEMICOLON, COMMA,
         PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, 
         EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, NOT_EQUALS,
         IDENTIFIER, INTEGER, REAL, STRING, END_OF_FILE, ERROR,
@@ -42,6 +42,9 @@ public class Token
         reservedWords.put("IF",      TokenType.IF);
         reservedWords.put("THEN",    TokenType.THEN);
         reservedWords.put("ELSE",    TokenType.ELSE);
+        reservedWords.put("CASE",    TokenType.CASE);
+        reservedWords.put("SELECT",  TokenType.CASE);
+        reservedWords.put("OF",      TokenType.OF);
         reservedWords.put("WRITE",   TokenType.WRITE);
         reservedWords.put("WRITELN", TokenType.WRITELN);
     }
@@ -169,6 +172,7 @@ public class Token
         {
             case '.' : token.type = TokenType.PERIOD;     break;
             case ';' : token.type = TokenType.SEMICOLON;  break;
+            case ',' : token.type = TokenType.COMMA;      break;
             case '+' : token.type = TokenType.PLUS;       break;
             case '-' : token.type = TokenType.MINUS;      break;
             case '*' : token.type = TokenType.STAR;       break;
