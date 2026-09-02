@@ -93,6 +93,7 @@ public class Parser
         statementStarters.add(REPEAT);
         statementStarters.add(WHILE);
         statementStarters.add(Token.TokenType.IF);
+        statementStarters.add(Token.TokenType.CASE);
         statementStarters.add(DO);
         statementStarters.add(Token.TokenType.WRITE);
         statementStarters.add(Token.TokenType.WRITELN);
@@ -130,6 +131,7 @@ public class Parser
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
             case WHILE :      stmtNode = parseWhileStatement();      break;
             case IF :         stmtNode = parseIfStatement();         break;
+            case CASE :     stmtNode = parseCaseStatement();       break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
             case SEMICOLON :  stmtNode = null; break;  // empty statement
@@ -318,6 +320,84 @@ public class Parser
         }
 
         return ifNode;
+    }
+
+    private Node parseCaseStatement(){
+
+        // The current token should now be CASE.
+
+        // Create a SELECT node.
+        Node selectNode = new Node(Node.NodeType.SELECT);
+
+        // Consume CASE.
+        currentToken = scanner.nextToken();
+
+        // The SELECT node adopts the expression node as its first child.
+        selectNode.adopt(parseExpression());
+
+        if (currentToken.type == OF) {
+            currentToken = scanner.nextToken(); // Consume OF
+        } else syntaxError("Expecting OF");
+
+        // Parse one or more case labels separated by commas.
+        while (currentToken.type != END && currentToken.type != END_OF_FILE)
+        {
+            Node caseNode = new Node(Node.NodeType.SELECT);
+            caseNode.lineNumber = currentToken.lineNumber;
+
+
+            while(currentToken.type != COLON){
+                if (currentToken.type == MINUS)
+                {
+                    currentToken = scanner.nextToken();
+                    if (currentToken.type != INTEGER) {
+                        syntaxError("Expecting integer case label");
+                        break;
+                    }
+
+                    Node negativeNode = new Node(NEGATE);
+                    Node valueNode = parseIntegerConstant();
+                    negativeNode.adopt(valueNode);
+                    caseNode.adopt(negativeNode);
+                }
+                else if (currentToken.type == INTEGER)
+                {
+                    // The CASE node adopts the integer constant node as its first child.
+                    caseNode.adopt(parseIntegerConstant());
+                }
+                else
+                {
+                    syntaxError("Expecting case label");
+                    break;
+                }
+
+                if (currentToken.type == COMMA) {
+                    currentToken = scanner.nextToken(); // Consume ,
+                    continue;
+                }
+            }
+
+            if (currentToken.type == COLON) {
+                currentToken = scanner.nextToken(); // Consume COLON
+            } else syntaxError("Expecting COLON");
+            
+            // The CASE node adopts the statement node as its second child.
+            Node stmtNode = parseStatement();
+            if (stmtNode != null) caseNode.adopt(stmtNode);
+
+            selectNode.adopt(caseNode);
+
+            if (currentToken.type == SEMICOLON) {
+                currentToken = scanner.nextToken(); // Consume ; after case arm
+            }
+        }
+
+        if (currentToken.type == END) {
+            currentToken = scanner.nextToken(); // Consume END
+        } else syntaxError("Expecting END");
+
+
+        return selectNode;
     }
     
     private Node parseWriteStatement()
