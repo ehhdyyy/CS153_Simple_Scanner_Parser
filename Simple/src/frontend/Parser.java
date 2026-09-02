@@ -345,39 +345,42 @@ public class Parser
             Node caseNode = new Node(Node.NodeType.SELECT);
             caseNode.lineNumber = currentToken.lineNumber;
 
-            if (currentToken.type == MINUS)
-            {
-                currentToken = scanner.nextToken();
-                if (currentToken.type != INTEGER) {
-                    syntaxError("Expecting integer case label");
+
+            while(currentToken.type != COLON){
+                if (currentToken.type == MINUS)
+                {
+                    currentToken = scanner.nextToken();
+                    if (currentToken.type != INTEGER) {
+                        syntaxError("Expecting integer case label");
+                        break;
+                    }
+
+                    Node negativeNode = new Node(NEGATE);
+                    Node valueNode = parseIntegerConstant();
+                    negativeNode.adopt(valueNode);
+                    caseNode.adopt(negativeNode);
+                }
+                else if (currentToken.type == INTEGER)
+                {
+                    // The CASE node adopts the integer constant node as its first child.
+                    caseNode.adopt(parseIntegerConstant());
+                }
+                else
+                {
+                    syntaxError("Expecting case label");
                     break;
                 }
 
-                Node negativeNode = new Node(NEGATE);
-                Node valueNode = parseIntegerConstant();
-                negativeNode.adopt(valueNode);
-                caseNode.adopt(negativeNode);
-            }
-            else if (currentToken.type == INTEGER)
-            {
-                // The CASE node adopts the integer constant node as its first child.
-                caseNode.adopt(parseIntegerConstant());
-            }
-            else
-            {
-                syntaxError("Expecting case label");
-                break;
-            }
-
-            if (currentToken.type == COMMA) {
-                currentToken = scanner.nextToken(); // Consume ,
-                continue;
+                if (currentToken.type == COMMA) {
+                    currentToken = scanner.nextToken(); // Consume ,
+                    continue;
+                }
             }
 
             if (currentToken.type == COLON) {
                 currentToken = scanner.nextToken(); // Consume COLON
             } else syntaxError("Expecting COLON");
-
+            
             // The CASE node adopts the statement node as its second child.
             Node stmtNode = parseStatement();
             if (stmtNode != null) caseNode.adopt(stmtNode);

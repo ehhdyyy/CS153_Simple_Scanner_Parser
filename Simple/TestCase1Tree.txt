@@ -1,15 +1,15 @@
 Parse tree:
 
-                                                                   PROGRAM TestCase1 
-                                                                           │
-                                                                     3: COMPOUND  
-                ┌─────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────┐
-           4: ASSIGN                                                                                                          6: SELECT  
-      ┌────────┴───────┐                          ┌────────────────────────────────────────┬──────────────────────────────────────┴──────────┬───────────────────────────────────────────────────────────────────┐
- VARIABLE i   INTEGER_CONSTANT 3                ADD                                     SELECT                                            SELECT                                                            SELECT  
-                                        ┌────────┴───────┐                    ┌────────────┴───────────┐                     ┌───────────────┴──────────────┐                                    ┌───────────────┴───────────────┐
-                                   VARIABLE i   INTEGER_CONSTANT 1   INTEGER_CONSTANT 1           7: ASSIGN               NEGATE                        8: ASSIGN                        INTEGER_CONSTANT 4                 9: ASSIGN  
-                                                                                               ┌──────┴─────┐                │                ┌────────────┴────────────┐                                         ┌─────────────┴────────────┐
-                                                                                          VARIABLE j   VARIABLE i   INTEGER_CONSTANT 8   VARIABLEj                 MULTIPLY                                 VARIABLE j                  MULTIPLY  
-                                                                                                                                                             ┌────────┴───────┐                                                   ┌────────┴────────┐     
-                                                                                                                                                      INTEGER_CONSTANT 8   VARIABLE i                                      INTEGER_CONSTANT 574   VARIABLE i     
+                                                                        PROGRAM TestCase1 
+                                                                                │
+                                                                          3: COMPOUND  
+                ┌──────────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────────┐
+           4: ASSIGN                                                                                                                    6: SELECT  
+      ┌────────┴───────┐                          ┌────────────────────────────────────────┬────────────────────────────────────────────────┴┬────────────────────────────────────────────────────────────────────────────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 3                ADD                                     SELECT                                            SELECT                                                                                      SELECT  
+                                        ┌────────┴───────┐                    ┌────────────┴───────────┐                     ┌───────────────┴──────────────┐                                      ┌────────────────────┬───────────────┴────┬───────────────────────────────┐
+                                   VARIABLE i   INTEGER_CONSTANT 1   INTEGER_CONSTANT 1           7: ASSIGN               NEGATE                       8: ASSIGN                        INTEGER_CONSTANT 5   INTEGER_CONSTANT 7   INTEGER_CONSTANT 4                  9: ASSIGN  
+                                                                                               ┌──────┴─────┐                │                ┌────────────┴────────────┐                                                                                  ┌─────────────┴────────────┐
+                                                                                          VARIABLE j   VARIABLE i   INTEGER_CONSTANT 8   VARIABLE j                 MULTIPLY                                                                          VARIABLE j                  MULTIPLY  
+                                                                                                                                                               ┌────────┴───────┐                                                                                              ┌────────┴────────┐
+                                                                                                                                            I         NTEGER_CONSTANT 8   VARIABLE i                                                                                          INTEGER_CONSTANT 574   VARIABLE i 
