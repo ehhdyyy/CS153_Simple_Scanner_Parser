@@ -96,12 +96,15 @@ public class Parser
         statementStarters.add(DO);
         statementStarters.add(Token.TokenType.WRITE);
         statementStarters.add(Token.TokenType.WRITELN);
+        statementStarters.add(Token.TokenType.FOR);
         
         // Tokens that can immediately follow a statement.
         statementFollowers.add(SEMICOLON);
         statementFollowers.add(END);
         statementFollowers.add(UNTIL);
         statementFollowers.add(END_OF_FILE);
+        statementFollowers.add (Token.TokenType.TO);
+        statementFollowers.add (Token.TokenType.DOWNTO);
         
         relationalOperators.add(EQUALS);
         relationalOperators.add(LESS_THAN);
@@ -129,6 +132,7 @@ public class Parser
             case BEGIN :      stmtNode = parseCompoundStatement();   break;
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
             case WHILE :      stmtNode = parseWhileStatement();      break;
+            case FOR :        stmtNode = parseForStatement();        break;
             case IF :         stmtNode = parseIfStatement();         break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
             case WRITELN :    stmtNode = parseWritelnStatement();    break;
@@ -265,7 +269,6 @@ public class Parser
         // Create a TEST node.
         Node testNode = new Node(TEST);
         testNode.lineNumber = currentToken.lineNumber;
-
         testNode.adopt(parseExpression());
         
 
@@ -281,6 +284,44 @@ public class Parser
         // The LOOP node adopts the statement node as its second child.
         Node stmtNode = parseStatement();
         if (stmtNode != null) loopNode.adopt(stmtNode);
+
+        return loopNode;
+    }
+
+    private Node parseForStatement () {
+        System.out.println ("for loop ran");
+        Node loopNode = new Node (LOOP);
+
+        if (currentToken.type == FOR)
+            currentToken = scanner.nextToken();
+        else
+            syntaxError ("expecting FOR loop");
+
+        Node testNode = new Node (TEST);
+        loopNode.adopt (testNode);
+
+        Node variable = parseAssignmentStatement().getChildren().getFirst(); // var set by for ( i := ... )
+
+        Node comparison = null;
+        if (currentToken.type == TO) {
+            currentToken = scanner.nextToken();
+            comparison = new Node (LT);
+        } else if (currentToken.type == DOWNTO) {
+            currentToken = scanner.nextToken();
+            comparison = new Node (GT);
+        } else
+            syntaxError ("expecting TO or DOWNTO (for loop)");
+
+        testNode.adopt (comparison);
+        assert comparison != null; // just adding to get rid of squiggle
+        comparison.adopt (variable);
+        comparison.adopt (parseExpression());
+
+        if (currentToken.type == DO)
+            currentToken = scanner.nextToken();
+        else
+            syntaxError ("expecting DO");
+        loopNode.adopt(parseStatement());
 
         return loopNode;
     }

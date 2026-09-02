@@ -1,0 +1,18 @@
+for loop ran
+Parse tree:
+
+                                  PROGRAM TestFor1 
+                                         │
+                                   3: COMPOUND  
+                                        │
+                                    4: LOOP  
+               ┌───────────────────────┴──────────────────────┐
+             TEST                                       4: COMPOUND  
+               │                                             │
+              LT                                        5: ASSIGN  
+      ┌────────┴───────┐                ┌───────────────────┴───────────────────┐
+ VARIABLE i   INTEGER_CONSTANT 5   VARIABLE j                                 ADD  
+                                                                  ┌────────────┴────────────┐
+                                                              MULTIPLY             INTEGER_CONSTANT 1 
+                                                         ┌────────┴────────┐
+                                                INTEGER_CONSTANT 10   VARIABLE i 
