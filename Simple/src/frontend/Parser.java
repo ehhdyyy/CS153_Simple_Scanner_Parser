@@ -270,8 +270,11 @@ public class Parser
 
         // Create a TEST node.
         Node testNode = new Node(TEST);
+
+        Node notNode = new Node(NOT);
+        testNode.adopt(notNode);
         testNode.lineNumber = currentToken.lineNumber;
-        testNode.adopt(parseExpression());
+        notNode.adopt(parseExpression());
         
 
         if (currentToken.type == DO)
