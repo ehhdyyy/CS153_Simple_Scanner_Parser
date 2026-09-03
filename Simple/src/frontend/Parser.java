@@ -291,7 +291,7 @@ public class Parser
     }
 
     private Node parseForStatement () {
-        System.out.println ("for loop ran");
+   
         Node compound = new Node (COMPOUND);
 
 
