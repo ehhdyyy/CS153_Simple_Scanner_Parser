@@ -13,11 +13,12 @@ public class Token
 {
     public enum TokenType
     {
-        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, IF, THEN, ELSE, CASE, OF, WRITE, WRITELN, 
+        PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, FOR, IF, THEN, ELSE, CASE, OF, WRITE, WRITELN,
         PERIOD, COLON, COLON_EQUALS, SEMICOLON, COMMA,
         PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, 
         EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, NOT_EQUALS,
-        IDENTIFIER, INTEGER, REAL, STRING, END_OF_FILE, ERROR
+        IDENTIFIER, INTEGER, REAL, STRING, END_OF_FILE, ERROR,
+        TO, DOWNTO
     }
     
     /**
@@ -34,6 +35,9 @@ public class Token
         reservedWords.put("REPEAT",  TokenType.REPEAT);
         reservedWords.put("UNTIL",   TokenType.UNTIL);
         reservedWords.put("WHILE",   TokenType.WHILE);
+        reservedWords.put("FOR",    TokenType.FOR);
+        reservedWords.put("TO",      TokenType.TO);
+        reservedWords.put("DOWNTO",  TokenType.DOWNTO);
         reservedWords.put("DO",      TokenType.DO);
         reservedWords.put("IF",      TokenType.IF);
         reservedWords.put("THEN",    TokenType.THEN);

@@ -97,12 +97,15 @@ public class Parser
         statementStarters.add(DO);
         statementStarters.add(Token.TokenType.WRITE);
         statementStarters.add(Token.TokenType.WRITELN);
+        statementStarters.add(Token.TokenType.FOR);
         
         // Tokens that can immediately follow a statement.
         statementFollowers.add(SEMICOLON);
         statementFollowers.add(END);
         statementFollowers.add(UNTIL);
         statementFollowers.add(END_OF_FILE);
+        statementFollowers.add (Token.TokenType.TO);
+        statementFollowers.add (Token.TokenType.DOWNTO);
         
         relationalOperators.add(EQUALS);
         relationalOperators.add(LESS_THAN);
@@ -130,6 +133,7 @@ public class Parser
             case BEGIN :      stmtNode = parseCompoundStatement();   break;
             case REPEAT :     stmtNode = parseRepeatStatement();     break;
             case WHILE :      stmtNode = parseWhileStatement();      break;
+            case FOR :        stmtNode = parseForStatement();        break;
             case IF :         stmtNode = parseIfStatement();         break;
             case CASE :     stmtNode = parseCaseStatement();       break;
             case WRITE :      stmtNode = parseWriteStatement();      break;
@@ -267,7 +271,6 @@ public class Parser
         // Create a TEST node.
         Node testNode = new Node(TEST);
         testNode.lineNumber = currentToken.lineNumber;
-
         testNode.adopt(parseExpression());
         
 
@@ -285,6 +288,67 @@ public class Parser
         if (stmtNode != null) loopNode.adopt(stmtNode);
 
         return loopNode;
+    }
+
+    private Node parseForStatement () {
+        System.out.println ("for loop ran");
+        Node compound = new Node (COMPOUND);
+
+
+        Node loopNode = new Node (LOOP);
+        Node testNode = new Node (TEST);
+
+
+        if (currentToken.type == FOR)
+            currentToken = scanner.nextToken();
+        else
+            syntaxError ("expecting FOR loop");
+
+        Node initial_assignment = parseAssignmentStatement();
+        compound.adopt (initial_assignment);
+        compound.adopt (loopNode);
+
+        Node variable = initial_assignment.getChildren().getFirst(); // var set by for ( i := ... )
+        Node updator = null;
+        Node comparison = null;
+
+        if (currentToken.type == TO) {
+            currentToken = scanner.nextToken();
+            updator = new Node (ADD);
+            comparison = new Node (GT);
+        } else if (currentToken.type == DOWNTO) {
+            currentToken = scanner.nextToken();
+            updator = new Node (SUBTRACT);
+            comparison = new Node (LT);
+        } else
+            syntaxError ("expecting TO or DOWNTO (for loop)");
+
+        testNode.adopt (comparison);
+        assert comparison != null; // just adding to get rid of squiggle
+
+        comparison.adopt (variable);
+        comparison.adopt (parseExpression());
+
+        if (currentToken.type == DO)
+            currentToken = scanner.nextToken();
+        else
+            syntaxError ("expecting DO");
+
+        loopNode.adopt (testNode);
+        loopNode.adopt (parseStatement());
+
+        Node updateVar = new Node (ASSIGN);
+        updateVar.adopt (variable);
+        updateVar.adopt (updator);
+
+        updator.adopt (variable);
+        Node one = new Node (INTEGER_CONSTANT);
+        one.value = 1L; // i have to do this since there's only one constructor ;_;
+        updator.adopt (one);
+
+        loopNode.adopt (updateVar);
+
+        return compound;
     }
 
     private Node parseIfStatement()

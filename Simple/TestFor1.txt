@@ -1,0 +1,7 @@
+program TestFor1;
+
+begin
+    for i := 1 to 5 do begin
+        j := 10*i + 1;
+    end;
+end.
