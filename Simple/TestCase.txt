@@ -1,0 +1,39 @@
+PROGRAM TestCase;
+
+BEGIN
+    i := 3; even := -999; odd := -999; prime := -999;
+
+    CASE i+1 OF
+        1:       j := i;
+        -8:      j := 8*i;
+        5, 7, 4: j := 574*i;
+    END;
+    
+    write('j = '); writeln(j);
+    writeln;
+
+    FOR i := -5 TO 15 DO BEGIN
+        CASE i OF
+            2: BEGIN even := i; prime := i END;
+            -4, -2, 0, 4, 6, 8, 10, 12, 14: even := i;
+            -5, -3, -1, 1, 3, 5, 
+            7, 9, 11, 13, 15:  BEGIN
+                                   odd := i;
+                                   CASE i OF
+                                       2, 3, 5, 7, 11, 13: prime := i
+                                   END
+                               END
+        END;
+
+        write('i ='); write(i:3); 
+        write(', even = ');   IF even  <> -999 THEN write(even:3)  ELSE write('...'); 
+        write(', odd = ');    IF odd   <> -999 THEN write(odd:3)   ELSE write('...');
+        write(', prime = ');  IF prime <> -999 THEN write(prime:3) ELSE write('...');
+        writeln;
+        
+        even := -999; odd := -999; prime := -999
+    END;
+    
+    writeln;
+    writeln('Done!')
+END.
