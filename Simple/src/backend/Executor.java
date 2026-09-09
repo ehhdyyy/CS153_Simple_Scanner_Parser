@@ -30,6 +30,8 @@ public class Executor
         singletons.add(INTEGER_CONSTANT);
         singletons.add(REAL_CONSTANT);
         singletons.add(STRING_CONSTANT);
+        singletons.add(NOT);
+        singletons.add(NEGATE);
         
         relationals.add(EQ);
         relationals.add(LT);
@@ -37,6 +39,8 @@ public class Executor
         relationals.add(LE);
         relationals.add(GE);
         relationals.add(NE);
+        relationals.add(AND);
+        relationals.add(OR);
     }
     
     public Executor(Symtab symtab)
@@ -57,9 +61,9 @@ public class Executor
             case SELECT :
             case WRITE :
             case WRITELN :  return visitStatement(node);
-            
+
             case TEST:      return visitTest(node);
-            
+
             default :       return visitExpression(node);
         }
     }
@@ -131,8 +135,9 @@ public class Executor
 
     private Object visitIf(Node ifNode)
     {
-        boolean condition = (Boolean) visit(ifNode.children.get(0));
-
+        Node comparisonNode = ifNode.children.getFirst();
+        boolean condition = (Boolean) visit(comparisonNode);
+    
         if (condition)
         {
             visit(ifNode.children.get(1));
@@ -238,38 +243,35 @@ public class Executor
                 case VARIABLE         : return visitVariable(expressionNode);
                 case INTEGER_CONSTANT : return visitIntegerConstant(expressionNode);
                 case REAL_CONSTANT    : return visitRealConstant(expressionNode);
-                case STRING_CONSTANT  : return visitStringConstant(expressionNode);
+                case STRING_CONSTANT  : return visitStringConstant(expressionNode);                
                 
+                case NEGATE           : return visitNegate(expressionNode);
+                case NOT              : return visitNot(expressionNode);
+            
                 default: return null;
             }
         }
-        if (expressionNode.type == NOT)
-        {
-            Boolean value = (Boolean) visit(expressionNode.children.get(0));
-            return !value;
-        }
-        if (expressionNode.type == NEGATE)
-        {
-            double value = (Double) visit(expressionNode.children.get(0));
-            return -value;
-        }
+        
         // Binary expressions.
-        double value1 = (Double) visit(expressionNode.children.get(0));
-        double value2 = (Double) visit(expressionNode.children.get(1));
         
         // Relational expressions.
         if (relationals.contains(expressionNode.type))
         {
+            Object value1 = visit(expressionNode.children.get(0));
+            Object value2 = visit(expressionNode.children.get(1));
             boolean value = false;
             
             switch (expressionNode.type)
             {
-                case EQ : value = value1 == value2; break;
-                case LT : value = value1 <  value2; break;
-                case GT : value = value1 >  value2; break;
-                case LE : value = value1 <=  value2; break;
-                case GE : value = value1 >=  value2; break;
-                case NE : value = value1 !=  value2; break;
+                case EQ : value = ((double) value1) == ((double) value2); break;
+                case NE : value = ((double) value1) != ((double) value2); break;
+                case LT : value = ((double) value1) <  ((double) value2); break;
+                case LE : value = ((double) value1) <= ((double) value2); break;
+                case GT : value = ((double) value1) >  ((double) value2); break;
+                case GE : value = ((double) value1) >= ((double) value2); break;
+                
+                case AND : value = ((boolean) value1) && ((boolean) value2); break;
+                case OR  : value = ((boolean) value1) || ((boolean) value2); break;
                 
                 default : break;
             }
@@ -277,6 +279,8 @@ public class Executor
             return value;
         }
            
+        double value1 = (double) visit(expressionNode.children.get(0));
+        double value2 = (double) visit(expressionNode.children.get(1));
         double value = 0.0;
         
         // Arithmetic expressions.
@@ -287,8 +291,21 @@ public class Executor
             case MULTIPLY : value = value1 * value2; break;
                 
             case DIVIDE :
+            case INTEGER_DIVIDE :
+            case MODULO :
             {
-                if (value2 != 0.0) value = value1/value2;
+                if (value2 != 0.0) 
+                {
+                    if (expressionNode.type == DIVIDE) value = value1/value2; 
+                    else
+                    {
+                        long ivalue1 = (long) value1;
+                        long ivalue2 = (long) value2;
+                        
+                        value = expressionNode.type == INTEGER_DIVIDE
+                                    ? ivalue1/ivalue2 : ivalue1%ivalue2;
+                    }
+                }
                 else
                 {
                     runtimeError(expressionNode, "Division by zero");
@@ -328,6 +345,16 @@ public class Executor
     private Object visitStringConstant(Node stringConstantNode)
     {
         return (String) stringConstantNode.value;
+    }
+    private Object visitNot(Node notNode)
+    {
+        boolean value = (Boolean) visit(notNode.children.get(0));
+        return !value;
+    }
+    private Object visitNegate(Node negateNode)
+    {
+        double value = (double) visit(negateNode.children.get(0));
+        return -value;
     }
 
     private void runtimeError(Node node, String message)

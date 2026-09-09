@@ -1,4 +1,4 @@
-Program TestIf;
+program TestIf;
 
 begin
  i := 1;
@@ -40,48 +40,48 @@ begin
 y := 88.88;
  END;
 
- write('i = '); write(i:3);
- write(', j = '); write(j:3);
- write(', x = '); write(x:5:2);
- write(', y = '); writeln(y:5:2);
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
 
- k := 10;
+k := 10;
 
- if i = j then i := 33
- else if not (i <= j) then i := 44
- else if i = j then i := 55
- else i := 6;
+if i = j then i := 33
+else if not (i <= j) then i := 44
+else if i = j then i := 55
+else i := 6;
 
- write('i = '); write(i:3);
- write(', j = '); write(j:3);
- write(', x = '); write(x:5:2);
- write(', y = '); writeln(y:5:2);
- write('k = '); writeln(k:3);
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+write('k = '); writeln(k:3);
 
- if not (i <= j) then if i div 22 <= j then j := 9 else j := -9;
+if not (i <= j) then if i div 22 <= j then j := 9 else j := -9;
 
- write('i = '); write(i:3);
- write(', j = '); write(j:3);
- write(', x = '); write(x:5:2);
- write(', y = '); writeln(y:5:2);
- write('k = '); writeln(k:3);
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+write('k = '); writeln(k:3);
 
- if i = j then if i <= j then k := 11 else k := 12;
+if i = j then if i <= j then k := 11 else k := 12;
 
- write('i = '); write(i:3);
- write(', j = '); write(j:3);
- write(', x = '); write(x:5:2);
- write(', y = '); writeln(y:5:2);
- write('k = '); writeln(k:3);
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+write('k = '); writeln(k:3);
 
- writeln;
- x := i + j + k - x - y;
- write('x = '); writeln(x:5:2);
+writeln;
+x := i + j + k - x - y;
+write('x = '); writeln(x:5:2);
 
- writeln;
- if not (i = j) and (i < j) and (i <> j) and (x < y) then write('Good-bye');
- if not (i < j) or (x <> y) then if i > j/2 then if i <> j then if x < 5*y then write(', world!');
+writeln;
+if not (i = j) and (i < j) and (i <> j) and (x < y) then write('Good-bye');
+if not (i < j) or (x <> y) then if i > j/2 then if i <> j then if x < 5*y then write(', world!');
 
- writeln;
- writeln('Done!');
+writeln;
+writeln('Done!');
 end.
