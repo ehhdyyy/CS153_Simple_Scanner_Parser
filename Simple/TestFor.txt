@@ -1,0 +1,22 @@
+program TestFor;
+
+begin
+ for i := 1 to 5 do begin
+ write('i = '); writeln(i);
+ end;
+ writeln;
+
+ for i := 5 downto 1 do begin
+ write('i = '); writeln(i);
+ end;
+ writeln;
+
+ for i := 1 to 3 do begin
+ for j := 4 downto 1 do begin
+ write('i = '); write(i);
+ write(', j = '); writeln(j);
+ END
+ end;
+
+ writeln;
+end.
