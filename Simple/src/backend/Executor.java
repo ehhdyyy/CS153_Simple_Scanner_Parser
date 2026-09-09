@@ -58,6 +58,7 @@ public class Executor
             case ASSIGN :   
             case LOOP : 
             case IF :
+            case SELECT :
             case WRITE :
             case WRITELN :  return visitStatement(node);
 
@@ -83,6 +84,7 @@ public class Executor
             case ASSIGN :    return visitAssign(statementNode);
             case LOOP :      return visitLoop(statementNode);
             case IF :        return visitIf(statementNode);
+            case SELECT :    return visitSelect(statementNode);
             case WRITE :     return visitWrite(statementNode);
             case WRITELN :   return visitWriteln(statementNode);
             
@@ -144,6 +146,30 @@ public class Executor
         {
             visit(ifNode.children.get(2));
         }
+
+        return null;
+    }
+
+    private Object visitSelect(Node selectNode)
+    {
+        double selector = (Double) visit(selectNode.children.get(0));
+
+        for (int index = 1; index < selectNode.children.size(); index++)
+        {
+            Node caseNode = selectNode.children.get(index);
+            Node statementNode = caseNode.children.get(caseNode.children.size() - 1);
+
+            for (int labelIndex = 0; labelIndex < caseNode.children.size() - 1; labelIndex++)
+            {
+                double label = (Double) visit(caseNode.children.get(labelIndex));
+                if (selector == label)
+                {
+                    visit(statementNode);
+                    return null;
+                }
+            }
+        }
+
         return null;
     }
     
