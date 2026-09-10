@@ -1,0 +1,87 @@
+program TestIf;
+
+begin
+ i := 1;
+ j := 2;
+
+ IF i = j THEN x := 3.14
+ ELSE x := -5;
+
+ IF i <> j THEN y := 3.14
+ ELSE y := -5;
+
+ write('i = '); write(i:3);
+ write(', j = '); write(j:3);
+ write(', x = '); write(x:5:2);
+ write(', y = '); writeln(y:5:2);
+
+ IF i = j THEN BEGIN
+ x := -7
+ END
+ ELSE BEGIN
+ x := 8;
+ END;
+
+ IF i <> j THEN BEGIN
+ y := 14
+ END
+ ELSE BEGIN
+ y := -2;
+ END;
+
+ write('i = '); write(i:3);
+ write(', j = '); write(j:3);
+ write(', x = '); write(x:5:2);
+ write(', y = '); writeln(y:5:2);
+
+ IF i = j THEN x := 55.55
+ ELSE BEGIN
+ x := 77.77;
+y := 88.88;
+ END;
+
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+
+k := 10;
+
+if i = j then i := 33
+else if not (i <= j) then i := 44
+else if i = j then i := 55
+else i := 6;
+
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+write('k = '); writeln(k:3);
+
+if not (i <= j) then if i div 22 <= j then j := 9 else j := -9;
+
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+write('k = '); writeln(k:3);
+
+if i = j then if i <= j then k := 11 else k := 12;
+
+write('i = '); write(i:3);
+write(', j = '); write(j:3);
+write(', x = '); write(x:5:2);
+write(', y = '); writeln(y:5:2);
+write('k = '); writeln(k:3);
+
+writeln;
+x := i + j + k - x - y;
+write('x = '); writeln(x:5:2);
+
+writeln;
+if not (i = j) and (i < j) and (i <> j) and (x < y) then write('Good-bye');
+if not (i < j) or (x <> y) then if i > j/2 then if i <> j then if x < 5*y then write(', world!');
+
+writeln;
+writeln('Done!');
+end.

@@ -1,2 +1,8 @@
 .vscode/
 bin/
+Simple/__MACOSX/._ajs.printutils.jar
+Simple/__MACOSX/src/._.DS_Store
+Simple/__MACOSX/src/backend/._Executor.java
+Simple/__MACOSX/src/frontend/._Parser.java
+Simple/__MACOSX/src/frontend/._Scanner.java
+Simple/__MACOSX/src/intermediate/._Node.java

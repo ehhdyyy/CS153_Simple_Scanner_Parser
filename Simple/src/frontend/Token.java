@@ -14,6 +14,7 @@ public class Token
     public enum TokenType
     {
         PROGRAM, BEGIN, END, REPEAT, UNTIL, WHILE, DO, FOR, IF, THEN, ELSE, CASE, OF, WRITE, WRITELN,
+        DIV, MOD, AND, OR, NOT,
         PERIOD, COLON, COLON_EQUALS, SEMICOLON, COMMA,
         PLUS, MINUS, STAR, SLASH, LPAREN, RPAREN, 
         EQUALS, LESS_THAN, LESS_EQUALS, GREATER_THAN, GREATER_EQUALS, NOT_EQUALS,
@@ -47,6 +48,11 @@ public class Token
         reservedWords.put("OF",      TokenType.OF);
         reservedWords.put("WRITE",   TokenType.WRITE);
         reservedWords.put("WRITELN", TokenType.WRITELN);
+        reservedWords.put("NOT",     TokenType.NOT);
+        reservedWords.put("AND",     TokenType.AND);
+        reservedWords.put("OR",      TokenType.OR);
+        reservedWords.put("DIV",     TokenType.DIV);
+        reservedWords.put("MOD",     TokenType.MOD);
     }
     
     public TokenType type;       // what type of token

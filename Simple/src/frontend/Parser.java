@@ -9,9 +9,11 @@ package frontend;
 
 import java.util.HashSet;
 
+import frontend.Token.TokenType;
 import intermediate.*;
 import static frontend.Token.TokenType.*;
 import static intermediate.Node.NodeType.*;
+import static intermediate.Node.NodeType.OR;
 
 public class Parser
 {
@@ -116,9 +118,13 @@ public class Parser
         
         simpleExpressionOperators.add(PLUS);
         simpleExpressionOperators.add(MINUS);
+        simpleExpressionOperators.add(Token.TokenType.OR);
         
         termOperators.add(STAR);
         termOperators.add(SLASH);
+        termOperators.add(DIV);
+        termOperators.add(MOD);
+        termOperators.add(Token.TokenType.AND);
     }
     
     private Node parseStatement()
@@ -271,7 +277,7 @@ public class Parser
         // Create a TEST node.
         Node testNode = new Node(TEST);
 
-        Node notNode = new Node(NOT);
+        Node notNode = new Node(Node.NodeType.NOT);
         testNode.adopt(notNode);
         testNode.lineNumber = currentToken.lineNumber;
         notNode.adopt(parseExpression());
@@ -363,8 +369,19 @@ public class Parser
 
         currentToken = scanner.nextToken(); //Consume IF
 
+        Node conditionNode;
+
+        if (currentToken.type == TokenType.NOT) {
+            currentToken = scanner.nextToken(); //Consume NOT
+            Node notNode = new Node(Node.NodeType.NOT);
+            notNode.adopt(parseExpression());
+            conditionNode = notNode;
+        }else{
+            conditionNode = parseExpression();
+        }
+        
         // The IF node adopts the EQ node as its first child
-        ifNode.adopt(parseExpression());
+        ifNode.adopt(conditionNode);
 
         if (currentToken.type == THEN)
         {
@@ -621,8 +638,16 @@ public class Parser
         // is a + or - operator.
         while (simpleExpressionOperators.contains(currentToken.type))
         {
-            Node opNode = currentToken.type == PLUS ? new Node(ADD)
-                                                    : new Node(SUBTRACT);
+            Node opNode = null;
+            switch (currentToken.type)
+            {
+                case PLUS   : opNode = new Node(ADD);         break;
+                case MINUS  : opNode = new Node(SUBTRACT);    break;
+                case OR     : opNode = new Node(OR);          break;
+
+                default:
+                    syntaxError("Unexpected token");
+            }
             // Consume the operator.
             currentToken = scanner.nextToken();  
 
@@ -654,8 +679,18 @@ public class Parser
         // is a * or / operator.
         while (termOperators.contains(currentToken.type))
         {
-            Node opNode = currentToken.type == STAR ? new Node(MULTIPLY)
-                                                    : new Node(DIVIDE);
+            Node opNode = null;
+            
+            switch (currentToken.type)
+            {
+                case STAR  : opNode = new Node(MULTIPLY);          break;
+                case SLASH : opNode = new Node(DIVIDE);            break;
+                case DIV   : opNode = new Node(INTEGER_DIVIDE);    break;
+                case MOD   : opNode = new Node(MODULO);            break;
+                case AND   : opNode = new Node(Node.NodeType.AND); break;
+                
+                default : syntaxError("Unexpected token");
+            }
             // Consume the operator.
             currentToken = scanner.nextToken();  
 
